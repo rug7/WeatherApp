@@ -26,20 +26,14 @@ public:
     void FetchAndDisplayWeather();
     GLuint loginBackgroundTexture;  // For login screen background
     std::vector<std::string> citySuggestions;
-    bool showSuggestions = false;
 
-
-    // Google Places API key (if using Google Places)
-    const std::string PLACES_API_KEY = "AIzaSyBx3dMjzZz8TXdcxsifLJojNHghdNtYWDA";
 
 private:
     void Initialize();
-    void MainLoop();
     void Cleanup();
     void RenderGUI();
     void RenderCityDetails();
     void RenderLoginForm();  // New method for login form
-    void FetchPlacesAutocomplete(const std::string& input);
     std::string GetCurrentTime1();
     std::string GetCurrentDate();
     const size_t MAX_CITIES = 7;
@@ -52,7 +46,6 @@ private:
     std::vector<std::string> autocompleteSuggestions;
     bool showAutocompleteSuggestions;
     std::string lastSearchInput;
-    const std::string GOOGLE_API_KEY = "AIzaSyBx3dMjzZz8TXdcxsifLJojNHghdNtYWDA";
     struct CityInfo {
         std::string name;
         std::string country;
@@ -80,18 +73,13 @@ private:
     GLuint detailsButtonIconTexture; // New variable
     GLuint favoriteButtonIconTexture;
     GLuint favoriteButtonIconTextureFilled;
-    GLuint welcomeIconTexture;
-    bool showFavoriteCities; // New item
+
     void FetchCityDetails(const std::string& city);
-    GLuint LoadIconTexture(const char* filename); // New method
-
+    static GLuint LoadIconTexture(const char* filename); // New method
     void SaveCredentials();  // New method to save credentials
-    bool LoadCredentials();  // New method to load credentials
-
     void AddFavoriteCity(const std::string& cityName);
     void RemoveFavoriteCity(const std::string& cityName);
     void SaveFavoriteCities();
-    bool LoadFavoriteCities();
     bool IsFavoriteCity(const std::string& cityName) const; // new item
     std::vector<std::string> favoriteCities;
 };

@@ -34,9 +34,6 @@ private:
     GLuint weatherIconTexture;
     void FetchWeatherData();
     void UpdateTemperature(float temp);
-    void UpdateHumidity(int hum);
-    void UpdatePressure(int pres);
-    void UpdateWindSpeed(float speed);
     GLuint LoadWeatherIcon(const std::string& filePath);
 };
 

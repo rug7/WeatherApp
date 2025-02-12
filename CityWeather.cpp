@@ -4,8 +4,7 @@
 #include "json.hpp"
 #include "imgui.h"
 #include <iostream>
-#include <iomanip>
-#include <sstream>
+
 
 using json = nlohmann::json;
 
@@ -64,18 +63,6 @@ void CityWeather::FetchWeatherData() {
 void CityWeather::UpdateTemperature(float temp) {
     temperature = temp;
     weatherLabel = cityName + ": " + std::to_string(temperature) + "°C";
-}
-
-void CityWeather::UpdateHumidity(int hum) {
-    humidity = hum;
-}
-
-void CityWeather::UpdatePressure(int pres) {
-    pressure = pres;
-}
-
-void CityWeather::UpdateWindSpeed(float speed) {
-    windSpeed = speed;
 }
 
 void CityWeather::Render(GLuint iconTexture) {

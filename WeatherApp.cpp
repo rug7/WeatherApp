@@ -8,11 +8,12 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+
 #ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
 
 #include <algorithm>
 #include <cctype>
+
 #pragma comment(lib, "ws2_32.lib")
 #endif
 
@@ -24,25 +25,10 @@ void WeatherApp::SaveCredentials() {
         file << username << std::endl;
         file << password << std::endl;
         file.close();
-    }
-    else {
+    } else {
         std::cerr << "Unable to open file for writing credentials." << std::endl;
     }
 }
-
-//bool WeatherApp::LoadCredentials() {
-//    std::ifstream file("credentials.txt");
-//    if (file.is_open()) {
-//        file.getline(username, 128);
-//        file.getline(password, 128);
-//        file.close();
-//        return true;
-//    }
-//    else {
-//        std::cerr << "Unable to open file for reading credentials." << std::endl;
-//        return false;
-//    }
-//}
 
 void WeatherApp::RenderLoginForm() {
     // Render full-screen background first
@@ -53,17 +39,17 @@ void WeatherApp::RenderLoginForm() {
                  ImGuiWindowFlags_NoMove |
                  ImGuiWindowFlags_NoBringToFrontOnFocus);
 
-    ImGui::Image((void*)(intptr_t)loginBackgroundTexture,
+    ImGui::Image((void *) (intptr_t) loginBackgroundTexture,
                  ImGui::GetIO().DisplaySize);
 
     // Copyright text at bottom
     float windowWidth = ImGui::GetIO().DisplaySize.x;
     float windowHeight = ImGui::GetIO().DisplaySize.y;
-    const char* copyright = "© 2025 Weather App. All rights reserved.";
+    const char *copyright = "© 2025 Weather App. All rights reserved.";
     float textWidth = ImGui::CalcTextSize(copyright).x;
     ImGui::SetCursorPos(ImVec2((windowWidth - textWidth) * 0.5f,
                                windowHeight - 30));
-    ImGui::TextColored(ImVec4(1,1,1,0.5f), "%s", copyright);
+    ImGui::TextColored(ImVec4(1, 1, 1, 0.5f), "%s", copyright);
 
     ImGui::End();
 
@@ -141,12 +127,10 @@ void WeatherApp::RenderLoginForm() {
                 isLoggedIn = true;
                 SaveCredentials();
                 errorMessage[0] = '\0';  // Clear error message
-            }
-            else {
+            } else {
                 strcpy_s(errorMessage, "Invalid username or password.");
             }
-        }
-        else {
+        } else {
             std::cerr << "Unable to open credentials file." << std::endl;
             // Create default credentials if file doesn't exist
             std::ofstream createFile("credentials.txt");
@@ -179,9 +163,9 @@ void WeatherApp::RenderLoginForm() {
     ImGui::PopStyleColor(5);
 }
 
-GLuint LoadTexture(const char* filename) {
+GLuint LoadTexture(const char *filename) {
     int width, height, channels;
-    unsigned char* data = stbi_load(filename, &width, &height, &channels, 0);
+    unsigned char *data = stbi_load(filename, &width, &height, &channels, 0);
     if (data == nullptr) {
         std::cerr << "Failed to load texture: " << filename << std::endl;
         return 0;
@@ -199,9 +183,9 @@ GLuint LoadTexture(const char* filename) {
     return texture;
 }
 
-GLuint LoadPNGTexture(const char* filename) {
+GLuint LoadPNGTexture(const char *filename) {
     int width, height, channels;
-    unsigned char* data = stbi_load(filename, &width, &height, &channels, STBI_rgb_alpha);
+    unsigned char *data = stbi_load(filename, &width, &height, &channels, STBI_rgb_alpha);
     if (data == nullptr) {
         std::cerr << "Failed to load texture: " << filename << std::endl;
         return 0;
@@ -219,9 +203,9 @@ GLuint LoadPNGTexture(const char* filename) {
     return texture;
 }
 
-GLuint WeatherApp::LoadIconTexture(const char* filename) {
+GLuint WeatherApp::LoadIconTexture(const char *filename) {
     int width, height, channels;
-    unsigned char* data = stbi_load(filename, &width, &height, &channels, 0);
+    unsigned char *data = stbi_load(filename, &width, &height, &channels, 0);
     if (data == nullptr) {
         std::cerr << "Failed to load icon: " << filename << std::endl;
         return 0;
@@ -239,40 +223,29 @@ GLuint WeatherApp::LoadIconTexture(const char* filename) {
     return texture;
 }
 
-void WeatherApp::AddFavoriteCity(const std::string& cityName) { // new item
+void WeatherApp::AddFavoriteCity(const std::string &cityName) { // new item
     favoriteCities.push_back(cityName); // new item
     SaveFavoriteCities(); // new item
 }
 
-void WeatherApp::RemoveFavoriteCity(const std::string& cityName) { // new item
-    favoriteCities.erase(std::remove(favoriteCities.begin(), favoriteCities.end(), cityName), favoriteCities.end()); // new item
+void WeatherApp::RemoveFavoriteCity(const std::string &cityName) { // new item
+    favoriteCities.erase(std::remove(favoriteCities.begin(), favoriteCities.end(), cityName),
+                         favoriteCities.end()); // new item
     SaveFavoriteCities(); // new item
 }
 
 void WeatherApp::SaveFavoriteCities() { // new item
     std::ofstream file("favorites.txt"); // new item
     if (file.is_open()) { // new item
-        for (const auto& city : favoriteCities) { // new item
+        for (const auto &city: favoriteCities) { // new item
             file << city << std::endl; // new item
         }
         file.close(); // new item
     }
 }
 
-//bool WeatherApp::LoadFavoriteCities() { // new item
-//    std::ifstream file("favorites.txt"); // new item
-//    if (file.is_open()) { // new item
-//        std::string city; // new item
-//        while (std::getline(file, city)) { // new item
-//            favoriteCities.push_back(city); // new item
-//        }
-//        file.close(); // new item
-//        return true; // new item
-//    }
-//    return false; // new item
-//}
 
-bool WeatherApp::IsFavoriteCity(const std::string& cityName) const { // new item
+bool WeatherApp::IsFavoriteCity(const std::string &cityName) const { // new item
     return std::find(favoriteCities.begin(), favoriteCities.end(), cityName) != favoriteCities.end(); // new item
 }
 
@@ -298,7 +271,7 @@ WeatherApp::WeatherApp() {
         return;
 
     // Create a windowed mode window and its OpenGL context
-    window = glfwCreateWindow(1920, 1080, "Weather App", NULL, NULL);  // Adjusted window size
+    window = glfwCreateWindow(1920, 1080, "Weather App", nullptr, nullptr);  // Adjusted window size
     if (!window) {
         glfwTerminate();
         return;
@@ -319,7 +292,8 @@ WeatherApp::WeatherApp() {
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO &io = ImGui::GetIO();
+    (void) io;
     ImGui::StyleColorsDark();
 
     // Load custom fonts
@@ -340,16 +314,17 @@ WeatherApp::WeatherApp() {
     }
     if (loginBackgroundTexture == 0) {
         std::cout << "Trying absolute path..." << std::endl;
-        loginBackgroundTexture = LoadTexture("C:/Users/majda/CLionProjects/WeatherAppCustom/Externals/mainBackground.jpg");
+        loginBackgroundTexture = LoadTexture(
+                "C:/Users/majda/CLionProjects/WeatherAppCustom/Externals/mainBackground.jpg");
     }
 
 
     // Initialize city weather objects
-    cities.push_back(CityWeather("London"));
-    cities.push_back(CityWeather("New York"));
-    cities.push_back(CityWeather("Tokyo"));
-    cities.push_back(CityWeather("Paris"));
-    cities.push_back(CityWeather("Berlin"));
+    cities.emplace_back(CityWeather("London"));
+    cities.emplace_back(CityWeather("New York"));
+    cities.emplace_back("Tokyo");
+    cities.emplace_back(CityWeather("Paris"));
+    cities.emplace_back(CityWeather("Berlin"));
 
     // Initialize search bar
     strcpy_s(citySearch, "");
@@ -386,7 +361,6 @@ WeatherApp::WeatherApp() {
     // Start the weather fetch thread
     weatherThread = std::thread(&WeatherApp::FetchAndDisplayWeather, this);
 }
-
 
 
 WeatherApp::~WeatherApp() {
@@ -430,8 +404,7 @@ void WeatherApp::Run() {
         // Render the GUI
         if (!isLoggedIn) {
             RenderLoginForm();  // Render the login form if not logged in
-        }
-        else {
+        } else {
             RenderGUI();  // Render the main GUI if logged in
         }
 
@@ -447,6 +420,7 @@ void WeatherApp::Run() {
         glfwSwapBuffers(window);
     }
 }
+
 void WeatherApp::RenderGUI() {
     // Professional color scheme
     ImVec4 bgColor = ImVec4(0.13f, 0.17f, 0.23f, 1.0f);
@@ -471,7 +445,7 @@ void WeatherApp::RenderGUI() {
 
         // Background Image
         ImGui::GetWindowDrawList()->AddImage(
-                (void*)(intptr_t)backgroundTexture,
+                (void *) (intptr_t) backgroundTexture,
                 ImVec2(0, 0),
                 ImVec2(1920, 1080)
         );
@@ -508,19 +482,24 @@ void WeatherApp::RenderGUI() {
             ImGui::SameLine();
 
             // Clear button styling
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 0.3f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 0.3f, 0.5f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.35f, 0.35f, 0.35f, 0.6f));
+            ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]); // Using the larger font
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f)); // Pure red
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.15f, 0.15f, 0.15f, 0.95f)); // Dark background
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.20f, 0.20f, 0.20f, 0.95f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.25f, 0.25f, 0.25f, 0.95f));
+            ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 25.0f);
 
             // Render clear button
-            if (ImGui::Button("×##clear", ImVec2(35, 35))) {
+            if (ImGui::Button("x##clear", ImVec2(50, 50))) {
                 searchBuffer[0] = '\0';
                 showAutocompleteSuggestions = false;
                 currentItem = -1;
                 lastSearchInput = "";
             }
 
-            ImGui::PopStyleColor(3);
+            ImGui::PopStyleVar();
+            ImGui::PopStyleColor(4);
+            ImGui::PopFont();
         }
 
 // Pop search bar styles
@@ -536,17 +515,15 @@ void WeatherApp::RenderGUI() {
                 } else if (currentItem == -1 && !autocompleteSuggestions.empty()) {
                     currentItem = autocompleteSuggestions.size() - 1;
                 }
-            }
-            else if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_DownArrow))) {
-                if (currentItem < (int)autocompleteSuggestions.size() - 1) {
+            } else if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_DownArrow))) {
+                if (currentItem < (int) autocompleteSuggestions.size() - 1) {
                     currentItem++;
                 } else if (currentItem == -1 && !autocompleteSuggestions.empty()) {
                     currentItem = 0;
                 }
-            }
-            else if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter))) {
-                if (currentItem >= 0 && currentItem < (int)autocompleteSuggestions.size()) {
-                    const std::string& selected = autocompleteSuggestions[currentItem];
+            } else if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter))) {
+                if (currentItem >= 0 && currentItem < (int) autocompleteSuggestions.size()) {
+                    const std::string &selected = autocompleteSuggestions[currentItem];
                     strcpy_s(searchBuffer, selected.c_str());
 
                     // Extract city name without country
@@ -568,8 +545,7 @@ void WeatherApp::RenderGUI() {
                     showAutocompleteSuggestions = false;
                     currentItem = -1;
                 }
-            }
-            else if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Escape))) {
+            } else if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Escape))) {
                 showAutocompleteSuggestions = false;
                 currentItem = -1;
             }
@@ -638,13 +614,8 @@ void WeatherApp::RenderGUI() {
                 searchCity = citySearch;
                 FetchCityDetails(searchCity);
                 showAutocompleteSuggestions = false;
-                currentItem = -1;
             }
         }
-//
-//        ImGui::PopItemWidth();
-//        ImGui::PopStyleColor(2);
-//        ImGui::PopStyleVar(2);
 
         // Weather Cards
         float cardWidth = 220.0f;
@@ -653,7 +624,7 @@ void WeatherApp::RenderGUI() {
         float spacingX = 40.0f;
 
         // Only display MAX_CITIES cards
-        for (size_t i = 0; i < std::min(cities.size(), (size_t)MAX_CITIES); ++i) {
+        for (size_t i = 0; i < std::min(cities.size(), (size_t) MAX_CITIES); ++i) {
             ImGui::SetCursorPos(ImVec2(margin + i * (cardWidth + spacingX), startY));
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 15.0f);
             ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.20f, 0.25f, 0.32f, 0.95f));
@@ -679,10 +650,10 @@ void WeatherApp::RenderGUI() {
                 // Buttons
                 ImGui::SetCursorPosY(cardHeight - 40);
                 ImGui::SetCursorPosX(10);
-                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0,0,0,0));
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.5f));
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.3f, 0.3f, 0.3f, 0.5f));
-                if (ImGui::ImageButton((void*)(intptr_t)detailsButtonIconTexture, ImVec2(30, 30))) {
+                if (ImGui::ImageButton((void *) (intptr_t) detailsButtonIconTexture, ImVec2(30, 30))) {
                     currentCity = &cities[i];
                     showCityDetails = true;
                 }
@@ -765,10 +736,10 @@ void WeatherApp::RenderGUI() {
 
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.1f, 0.1f, 0.1f, 0.7f));
         if (ImGui::BeginChild("Footer", ImVec2(ImGui::GetIO().DisplaySize.x, footerHeight), false)) {
-            const char* copyright = "© 2025 Weather App. All rights reserved.";
+            const char *copyright = "© 2025 Weather App. All rights reserved.";
             float textWidth = ImGui::CalcTextSize(copyright).x;
             ImGui::SetCursorPos(ImVec2((ImGui::GetIO().DisplaySize.x - textWidth) * 0.5f, 5));
-            ImGui::TextColored(ImVec4(1,1,1,0.7f), "%s", copyright);
+            ImGui::TextColored(ImVec4(1, 1, 1, 0.7f), "%s", copyright);
             ImGui::EndChild();
         }
         ImGui::PopStyleColor();
@@ -780,50 +751,6 @@ void WeatherApp::RenderGUI() {
         }
         ImGui::PopStyleColor(4); // Pop the initial style colors
 
-    }
-}
-
-void WeatherApp::FetchPlacesAutocomplete(const std::string& input) {
-    // Encode the input for URL
-    std::string encodedInput;
-    for (char c : input) {
-        if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') {
-            encodedInput += c;
-        } else {
-            char hex[4];
-            sprintf_s(hex, "%%%02X", (unsigned char)c);
-            encodedInput += hex;
-        }
-    }
-
-    // Construct the URL
-    std::string url = "/maps/api/place/autocomplete/json"
-                      "?input=" + encodedInput +
-                      "&types=(cities)" +
-                      "&key=" + GOOGLE_API_KEY;
-
-    // Make the API request
-    httplib::Client cli("maps.googleapis.com");
-    auto res = cli.Get(url.c_str());
-
-    if (res && res->status == 200) {
-        try {
-            auto json = nlohmann::json::parse(res->body);
-            autocompleteSuggestions.clear();
-
-            // Parse predictions
-            if (json.contains("predictions")) {
-                for (const auto& prediction : json["predictions"]) {
-                    if (prediction.contains("description")) {
-                        autocompleteSuggestions.push_back(prediction["description"].get<std::string>());
-                    }
-                }
-            }
-        } catch (const std::exception& e) {
-            std::cerr << "Failed to parse Places API response: " << e.what() << std::endl;
-        }
-    } else {
-        std::cerr << "Failed to fetch Places autocomplete suggestions" << std::endl;
     }
 }
 
@@ -845,12 +772,13 @@ void WeatherApp::RenderCityDetails() {
 
         ImGui::SameLine();
         bool isFavorite = IsFavoriteCity(currentCity->GetCityName());
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0,0,0,0));
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.5f));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.3f, 0.3f, 0.3f, 0.5f));
         // Use ImageButton instead of Button with the appropriate icon
-        if (ImGui::ImageButton((void*)(intptr_t)(isFavorite ? favoriteButtonIconTextureFilled : favoriteButtonIconTexture),
-                               ImVec2(30, 30))) {
+        if (ImGui::ImageButton(
+                (void *) (intptr_t) (isFavorite ? favoriteButtonIconTextureFilled : favoriteButtonIconTexture),
+                ImVec2(30, 30))) {
             if (isFavorite) {
                 RemoveFavoriteCity(currentCity->GetCityName());
             } else {
@@ -906,6 +834,7 @@ void WeatherApp::RenderCityDetails() {
     }
     ImGui::End();
 }
+
 std::string WeatherApp::GetCurrentTime1() {
     auto now = std::time(nullptr);
     struct tm localTime;
@@ -926,7 +855,7 @@ std::string WeatherApp::GetCurrentDate() {
 
 void WeatherApp::FetchAndDisplayWeather() {
     // List of cities
-    std::vector<std::string> cityNames = { "London", "New York", "Tokyo", "Paris", "Berlin" };
+    std::vector<std::string> cityNames = {"London", "New York", "Tokyo", "Paris", "Berlin"};
 
     while (!stopThread.load()) {
         for (size_t i = 0; i < cities.size(); ++i) {
@@ -938,7 +867,7 @@ void WeatherApp::FetchAndDisplayWeather() {
     }
 }
 
-void WeatherApp::FetchCityDetails(const std::string& city) {
+void WeatherApp::FetchCityDetails(const std::string &city) {
     // Extract city name from "City, Country" format
     std::string cityName = city;
     size_t commaPos = city.find(',');
@@ -957,7 +886,7 @@ void WeatherApp::FetchCityDetails(const std::string& city) {
         auto json = nlohmann::json::parse(res->body);
 
         // Check if city already exists
-        for (auto& cityWeather : cities) {
+        for (auto &cityWeather: cities) {
             if (cityWeather.GetCityName() == cityName) {  // Compare with cityName instead of city
                 cityWeather.UpdateWeatherData();
                 currentCity = &cityWeather;
@@ -985,14 +914,14 @@ void WeatherApp::FetchCityDetails(const std::string& city) {
     }
 }
 
-void WeatherApp::FetchCitySuggestions(const std::string& input) {
+void WeatherApp::FetchCitySuggestions(const std::string &input) {
     if (input.length() < 2) return;
 
     autocompleteSuggestions.clear();
     std::string inputLower = input;
     std::transform(inputLower.begin(), inputLower.end(), inputLower.begin(), ::tolower);
 
-    for (const auto& city : allCities) {
+    for (const auto &city: allCities) {
         std::string cityLower = city.name;
         std::transform(cityLower.begin(), cityLower.end(), cityLower.begin(), ::tolower);
 
@@ -1007,6 +936,7 @@ void WeatherApp::FetchCitySuggestions(const std::string& input) {
         autocompleteSuggestions.resize(10);
     }
 }
+
 bool WeatherApp::LoadCitiesFromJson() {
     std::ifstream file("Externals/cities.json");
     if (!file.is_open()) {
@@ -1018,7 +948,7 @@ bool WeatherApp::LoadCitiesFromJson() {
         json citiesJson = json::parse(file);
         allCities.clear();
 
-        for (const auto& city : citiesJson["cities"]) {
+        for (const auto &city: citiesJson["cities"]) {
             CityInfo cityInfo;
             cityInfo.name = city["name"].get<std::string>();
             cityInfo.country = city["country"].get<std::string>();
@@ -1027,13 +957,13 @@ bool WeatherApp::LoadCitiesFromJson() {
 
         // Sort cities by name
         std::sort(allCities.begin(), allCities.end(),
-                  [](const CityInfo& a, const CityInfo& b) {
+                  [](const CityInfo &a, const CityInfo &b) {
                       return a.name < b.name;
                   });
 
         return true;
     }
-    catch (const std::exception& e) {
+    catch (const std::exception &e) {
         std::cerr << "Error parsing cities.json: " << e.what() << std::endl;
         return false;
     }
