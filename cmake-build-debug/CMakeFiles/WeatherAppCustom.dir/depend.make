@@ -140,6 +140,7 @@ CMakeFiles/WeatherAppCustom.dir/main.cpp.obj: \
  ../CityWeather.h \
  ../WeatherApp.h \
  ../httplib.h \
+ ../json.hpp \
  ../main.cpp \
  C:/vcpkg/installed/x64-windows/include/GL/gl.h \
  C:/vcpkg/installed/x64-windows/include/GL/glcorearb.h \

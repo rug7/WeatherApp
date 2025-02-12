@@ -12,7 +12,11 @@
 #include <thread>
 #include <atomic>
 #include "httplib.h"
-
+#include <algorithm>
+#include <cctype>
+#include <iomanip>
+#include "httplib.h"
+#include "json.hpp"
 class WeatherApp {
 public:
     WeatherApp();
@@ -24,8 +28,9 @@ public:
     std::vector<std::string> citySuggestions;
     bool showSuggestions = false;
 
+
     // Google Places API key (if using Google Places)
-    const std::string PLACES_API_KEY = "your_google_places_api_key";
+    const std::string PLACES_API_KEY = "AIzaSyBx3dMjzZz8TXdcxsifLJojNHghdNtYWDA";
 
 private:
     void Initialize();
@@ -34,6 +39,7 @@ private:
     void RenderGUI();
     void RenderCityDetails();
     void RenderLoginForm();  // New method for login form
+    void FetchPlacesAutocomplete(const std::string& input);
     std::string GetCurrentTime1();
     std::string GetCurrentDate();
     const size_t MAX_CITIES = 7;
@@ -42,11 +48,23 @@ private:
     float notificationTimer = 0.0f;
     void FetchCitySuggestions(const std::string& input);
     CityWeather tempCity{""}; // Initialize with empty string
+    // Add these members
+    std::vector<std::string> autocompleteSuggestions;
+    bool showAutocompleteSuggestions;
+    std::string lastSearchInput;
+    const std::string GOOGLE_API_KEY = "AIzaSyBx3dMjzZz8TXdcxsifLJojNHghdNtYWDA";
+    struct CityInfo {
+        std::string name;
+        std::string country;
+    };
+    std::vector<CityInfo> allCities;
 
     bool isLoggedIn;  // New flag for login status
     char username[128];  // Username input
     char password[128];  // Password input
     char errorMessage[128];  // Error message for login form
+    bool LoadCitiesFromJson();
+
 
 
     GLFWwindow* window;

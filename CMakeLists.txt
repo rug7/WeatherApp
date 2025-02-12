@@ -11,6 +11,7 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(GLEW REQUIRED)
 
+
 # Add Windows Socket library for httplib
 if(WIN32)
     set(PLATFORM_LIBS ws2_32 wsock32)
@@ -78,3 +79,5 @@ endif()
 # Copy favorites.txt
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/favorites.txt
         ${CMAKE_BINARY_DIR}/favorites.txt COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Externals/cities.json
+        ${CMAKE_BINARY_DIR}/Externals/cities.json COPYONLY)

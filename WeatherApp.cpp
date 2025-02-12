@@ -2,27 +2,20 @@
 #include <ctime>
 #include <iostream>
 #include <iomanip>
-#include <sstream>
-#include "httplib.h"  // Included on the same line
-#include "json.hpp"
 #include "stb_image.h"  // To load the background image
-#include <fstream>
 
-// Include GLEW before any other OpenGL headers
-#include <GL/glew.h>
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
+
+#include <algorithm>
+#include <cctype>
 #pragma comment(lib, "ws2_32.lib")
 #endif
 
-#include "httplib.h"
 using json = nlohmann::json;
 
 void WeatherApp::SaveCredentials() {
@@ -37,19 +30,19 @@ void WeatherApp::SaveCredentials() {
     }
 }
 
-bool WeatherApp::LoadCredentials() {
-    std::ifstream file("credentials.txt");
-    if (file.is_open()) {
-        file.getline(username, 128);
-        file.getline(password, 128);
-        file.close();
-        return true;
-    }
-    else {
-        std::cerr << "Unable to open file for reading credentials." << std::endl;
-        return false;
-    }
-}
+//bool WeatherApp::LoadCredentials() {
+//    std::ifstream file("credentials.txt");
+//    if (file.is_open()) {
+//        file.getline(username, 128);
+//        file.getline(password, 128);
+//        file.close();
+//        return true;
+//    }
+//    else {
+//        std::cerr << "Unable to open file for reading credentials." << std::endl;
+//        return false;
+//    }
+//}
 
 void WeatherApp::RenderLoginForm() {
     // Render full-screen background first
@@ -266,18 +259,18 @@ void WeatherApp::SaveFavoriteCities() { // new item
     }
 }
 
-bool WeatherApp::LoadFavoriteCities() { // new item
-    std::ifstream file("favorites.txt"); // new item
-    if (file.is_open()) { // new item
-        std::string city; // new item
-        while (std::getline(file, city)) { // new item
-            favoriteCities.push_back(city); // new item
-        }
-        file.close(); // new item
-        return true; // new item
-    }
-    return false; // new item
-}
+//bool WeatherApp::LoadFavoriteCities() { // new item
+//    std::ifstream file("favorites.txt"); // new item
+//    if (file.is_open()) { // new item
+//        std::string city; // new item
+//        while (std::getline(file, city)) { // new item
+//            favoriteCities.push_back(city); // new item
+//        }
+//        file.close(); // new item
+//        return true; // new item
+//    }
+//    return false; // new item
+//}
 
 bool WeatherApp::IsFavoriteCity(const std::string& cityName) const { // new item
     return std::find(favoriteCities.begin(), favoriteCities.end(), cityName) != favoriteCities.end(); // new item
@@ -296,6 +289,9 @@ WeatherApp::WeatherApp() {
             std::cout << "Created default credentials file" << std::endl;
         }
     }
+    if (!LoadCitiesFromJson()) {
+        std::cerr << "Failed to load cities database" << std::endl;
+    }
     checkFile.close();
     // Initialize GLFW
     if (!glfwInit())
@@ -313,6 +309,7 @@ WeatherApp::WeatherApp() {
     glfwSwapInterval(1); // Enable vsync
 
     // Initialize GLEW
+
     glewExperimental = GL_TRUE; // Ensure GLEW uses modern techniques for managing OpenGL functionality
     if (glewInit() != GLEW_OK) {
         printf("Failed to initialize GLEW!\n");
@@ -358,6 +355,10 @@ WeatherApp::WeatherApp() {
     strcpy_s(citySearch, "");
     showCityDetails = false;
     currentCity = nullptr;
+    showAutocompleteSuggestions = false;
+    lastSearchInput = "";
+    autocompleteSuggestions.clear();
+
 
     // Load background image
     backgroundTexture = LoadTexture("Externals/wallpaper.jpg");  // Updated image path
@@ -490,50 +491,152 @@ void WeatherApp::RenderGUI() {
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 12));
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.15f, 0.20f, 0.25f, 0.95f));
         ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.17f, 0.22f, 0.27f, 0.95f));
+
+// Create a group for the search bar and clear button
+        ImGui::BeginGroup();
         ImGui::PushItemWidth(700);
 
-        // Modified search input with suggestions
+// Input text
         static char searchBuffer[256] = "";
-        if (ImGui::InputText("##Search", searchBuffer, IM_ARRAYSIZE(searchBuffer),
-                             ImGuiInputTextFlags_EnterReturnsTrue)) {
-            strcpy_s(citySearch, searchBuffer);
-            searchCity = citySearch;
-            FetchCityDetails(searchCity);
-            showSuggestions = false;
+        static int currentItem = -1;
+        bool searchChanged = ImGui::InputText("##Search", searchBuffer, IM_ARRAYSIZE(searchBuffer),
+                                              ImGuiInputTextFlags_EnterReturnsTrue);
+
+// Calculate position for the clear button
+        float buttonPosX = ImGui::GetItemRectMax().x - 35;
+        float buttonPosY = ImGui::GetItemRectMin().y + (ImGui::GetItemRectSize().y - 30) * 0.5f;
+
+// Position the clear button
+        ImGui::SameLine(0, 0);
+        ImGui::SetCursorPosX(buttonPosX);
+        ImGui::SetCursorPosY(buttonPosY);
+
+// Style for the clear button
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0,0,0,0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.3f, 0.3f, 0.3f, 0.5f));
+
+        if (ImGui::Button("×##clear", ImVec2(30, 30))) {
+            searchBuffer[0] = '\0';
+            showAutocompleteSuggestions = false;
         }
 
-        // Show suggestions if typing
+        ImGui::PopStyleColor(3);
+        ImGui::EndGroup();
+
+
+// Handle keyboard navigation
+        if (ImGui::IsItemFocused()) {
+            if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_UpArrow))) {
+                if (currentItem > 0) {
+                    currentItem--;
+                } else if (currentItem == -1 && !autocompleteSuggestions.empty()) {
+                    currentItem = autocompleteSuggestions.size() - 1;
+                }
+            }
+            else if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_DownArrow))) {
+                if (currentItem < (int)autocompleteSuggestions.size() - 1) {
+                    currentItem++;
+                } else if (currentItem == -1 && !autocompleteSuggestions.empty()) {
+                    currentItem = 0;
+                }
+            }
+            else if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter))) {
+                if (currentItem >= 0 && currentItem < (int)autocompleteSuggestions.size()) {
+                    const std::string& selected = autocompleteSuggestions[currentItem];
+                    strcpy_s(searchBuffer, selected.c_str());
+
+                    // Extract city name without country
+                    std::string cityName = selected;
+                    size_t commaPos = selected.find(',');
+                    if (commaPos != std::string::npos) {
+                        cityName = selected.substr(0, commaPos);
+                    }
+
+                    strcpy_s(citySearch, cityName.c_str());
+                    searchCity = cityName;
+                    FetchCityDetails(cityName);
+                    showAutocompleteSuggestions = false;
+                    currentItem = -1;
+                } else if (strlen(searchBuffer) > 0) {
+                    // Handle direct input
+                    searchCity = searchBuffer;
+                    FetchCityDetails(searchCity);
+                    showAutocompleteSuggestions = false;
+                    currentItem = -1;
+                }
+            }
+            else if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Escape))) {
+                showAutocompleteSuggestions = false;
+                currentItem = -1;
+            }
+        }
+
+// Check for changes in input to show suggestions
         if (strlen(searchBuffer) >= 2) {
+            if (lastSearchInput != searchBuffer) {
+                lastSearchInput = searchBuffer;
+                autocompleteSuggestions.clear();
+                currentItem = -1;
+
+                FetchCitySuggestions(searchBuffer);
+                showAutocompleteSuggestions = true;
+            }
+        } else {
+            showAutocompleteSuggestions = false;
+        }
+
+// Show suggestions dropdown
+        if (showAutocompleteSuggestions && !autocompleteSuggestions.empty()) {
             ImGui::SetNextWindowPos(ImVec2(margin, margin + 250));
-            ImGui::SetNextWindowSize(ImVec2(700, 0));
+            ImGui::SetNextWindowSize(ImVec2(700, ImGui::GetTextLineHeightWithSpacing() *
+                                                 std::min(autocompleteSuggestions.size(), size_t(5)) + 20));
+
             ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 12.0f);
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.20f, 0.25f, 0.32f, 0.95f));
 
             if (ImGui::Begin("##Suggestions", nullptr,
                              ImGuiWindowFlags_NoTitleBar |
                              ImGuiWindowFlags_NoMove |
                              ImGuiWindowFlags_NoResize |
-                             ImGuiWindowFlags_AlwaysAutoResize)) {
+                             ImGuiWindowFlags_NoScrollbar |
+                             ImGuiWindowFlags_NoSavedSettings)) {
 
-                // Add some common cities as suggestions
-                const std::vector<std::string> suggestions = {
-                        "London", "New York", "Tokyo", "Paris", "Berlin",
-                        "Dubai", "Singapore", "Hong Kong", "Sydney", "Moscow"
-                };
+                for (int i = 0; i < autocompleteSuggestions.size(); i++) {
+                    const bool is_selected = (i == currentItem);
+                    if (ImGui::Selectable(autocompleteSuggestions[i].c_str(), is_selected)) {
+                        strcpy_s(searchBuffer, autocompleteSuggestions[i].c_str());
+                        strcpy_s(citySearch, autocompleteSuggestions[i].c_str());
+                        searchCity = autocompleteSuggestions[i];
+                        FetchCityDetails(searchCity);
+                        showAutocompleteSuggestions = false;
+                        currentItem = -1;
+                    }
 
-                for (const auto& city : suggestions) {
-                    if (city.find(searchBuffer) != std::string::npos) {
-                        if (ImGui::Selectable(city.c_str())) {
-                            strcpy_s(searchBuffer, city.c_str());
-                            strcpy_s(citySearch, city.c_str());
-                            searchCity = city;
-                            FetchCityDetails(searchCity);
-                            ImGui::CloseCurrentPopup();
-                        }
+                    if (is_selected) {
+                        ImGui::SetItemDefaultFocus();
+                    }
+
+                    // Keep suggestions visible when hovering
+                    if (ImGui::IsItemHovered()) {
+                        currentItem = i;
                     }
                 }
                 ImGui::End();
             }
+            ImGui::PopStyleColor();
             ImGui::PopStyleVar();
+        }
+
+// Handle Enter key press for direct input
+        if (searchChanged) {
+            if (strlen(searchBuffer) > 0) {
+                strcpy_s(citySearch, searchBuffer);
+                searchCity = citySearch;
+                FetchCityDetails(searchCity);
+                showAutocompleteSuggestions = false;
+                currentItem = -1;
+            }
         }
 
         ImGui::PopItemWidth();
@@ -573,10 +676,14 @@ void WeatherApp::RenderGUI() {
                 // Buttons
                 ImGui::SetCursorPosY(cardHeight - 40);
                 ImGui::SetCursorPosX(10);
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0,0,0,0));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.5f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.3f, 0.3f, 0.3f, 0.5f));
                 if (ImGui::ImageButton((void*)(intptr_t)detailsButtonIconTexture, ImVec2(30, 30))) {
                     currentCity = &cities[i];
                     showCityDetails = true;
                 }
+                ImGui::PopStyleColor(3);
 
                 ImGui::SameLine();
                 ImGui::SetCursorPosX(cardWidth - 40);
@@ -671,8 +778,52 @@ void WeatherApp::RenderGUI() {
         ImGui::PopStyleColor(4); // Pop the initial style colors
 
     }
-//    ImGui::End();
 }
+
+void WeatherApp::FetchPlacesAutocomplete(const std::string& input) {
+    // Encode the input for URL
+    std::string encodedInput;
+    for (char c : input) {
+        if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') {
+            encodedInput += c;
+        } else {
+            char hex[4];
+            sprintf_s(hex, "%%%02X", (unsigned char)c);
+            encodedInput += hex;
+        }
+    }
+
+    // Construct the URL
+    std::string url = "/maps/api/place/autocomplete/json"
+                      "?input=" + encodedInput +
+                      "&types=(cities)" +
+                      "&key=" + GOOGLE_API_KEY;
+
+    // Make the API request
+    httplib::Client cli("maps.googleapis.com");
+    auto res = cli.Get(url.c_str());
+
+    if (res && res->status == 200) {
+        try {
+            auto json = nlohmann::json::parse(res->body);
+            autocompleteSuggestions.clear();
+
+            // Parse predictions
+            if (json.contains("predictions")) {
+                for (const auto& prediction : json["predictions"]) {
+                    if (prediction.contains("description")) {
+                        autocompleteSuggestions.push_back(prediction["description"].get<std::string>());
+                    }
+                }
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Failed to parse Places API response: " << e.what() << std::endl;
+        }
+    } else {
+        std::cerr << "Failed to fetch Places autocomplete suggestions" << std::endl;
+    }
+}
+
 void WeatherApp::RenderCityDetails() {
     // Center window
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
@@ -691,7 +842,9 @@ void WeatherApp::RenderCityDetails() {
 
         ImGui::SameLine();
         bool isFavorite = IsFavoriteCity(currentCity->GetCityName());
-
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0,0,0,0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.3f, 0.3f, 0.3f, 0.5f));
         // Use ImageButton instead of Button with the appropriate icon
         if (ImGui::ImageButton((void*)(intptr_t)(isFavorite ? favoriteButtonIconTextureFilled : favoriteButtonIconTexture),
                                ImVec2(30, 30))) {
@@ -701,7 +854,7 @@ void WeatherApp::RenderCityDetails() {
                 AddFavoriteCity(currentCity->GetCityName());
             }
         }
-
+        ImGui::PopStyleColor(3);
         ImGui::Spacing();
         ImGui::Separator();
         ImGui::Spacing();
@@ -784,10 +937,17 @@ void WeatherApp::FetchAndDisplayWeather() {
 
 void WeatherApp::FetchCityDetails(const std::string& city) {
     // First verify if the city exists by making an API call
+    std::string cityName = city;
+    size_t commaPos = city.find(',');
+    if (commaPos != std::string::npos) {
+        cityName = city.substr(0, commaPos);
+    }
+
+    // Rest of your existing code, but use cityName instead of city
     const std::string API_KEY = "fca1d27d648fbdf79758043a64459748";
     httplib::Client cli("http://api.openweathermap.org");
 
-    auto res = cli.Get(("/data/2.5/weather?q=" + city + "&appid=" + API_KEY + "&units=metric").c_str());
+    auto res = cli.Get(("/data/2.5/weather?q=" + cityName + "&appid=" + API_KEY + "&units=metric").c_str());
 
     if (res && res->status == 200) {
         // City exists, proceed with adding/updating
@@ -829,24 +989,53 @@ void WeatherApp::FetchCityDetails(const std::string& city) {
 void WeatherApp::FetchCitySuggestions(const std::string& input) {
     if (input.length() < 2) return;
 
-    const std::string url = "https://maps.googleapis.com/maps/api/place/autocomplete/json"
-                            "?input=" + input +
-                            "&types=(cities)" +
-                            "&key=" + PLACES_API_KEY;
+    autocompleteSuggestions.clear();
+    std::string inputLower = input;
+    std::transform(inputLower.begin(), inputLower.end(), inputLower.begin(), ::tolower);
 
-    httplib::Client cli("maps.googleapis.com", 443);
-    cli.set_connection_timeout(2);
-    auto res = cli.Get(url.c_str());
+    for (const auto& city : allCities) {
+        std::string cityLower = city.name;
+        std::transform(cityLower.begin(), cityLower.end(), cityLower.begin(), ::tolower);
 
-    if (res && res->status == 200) {
-        auto json = nlohmann::json::parse(res->body);
-        citySuggestions.clear();
-
-        for (const auto& prediction : json["predictions"]) {
-            citySuggestions.push_back(
-                    prediction["structured_formatting"]["main_text"].get<std::string>()
-            );
+        if (cityLower.find(inputLower) != std::string::npos) {
+            // Add city name with country
+            autocompleteSuggestions.push_back(city.name + ", " + city.country);
         }
-        showSuggestions = true;
+    }
+
+    // Limit the number of suggestions
+    if (autocompleteSuggestions.size() > 10) {
+        autocompleteSuggestions.resize(10);
+    }
+}
+bool WeatherApp::LoadCitiesFromJson() {
+    std::ifstream file("Externals/cities.json");
+    if (!file.is_open()) {
+        std::cerr << "Failed to open cities.json" << std::endl;
+        return false;
+    }
+
+    try {
+        json citiesJson = json::parse(file);
+        allCities.clear();
+
+        for (const auto& city : citiesJson["cities"]) {
+            CityInfo cityInfo;
+            cityInfo.name = city["name"].get<std::string>();
+            cityInfo.country = city["country"].get<std::string>();
+            allCities.push_back(cityInfo);
+        }
+
+        // Sort cities by name
+        std::sort(allCities.begin(), allCities.end(),
+                  [](const CityInfo& a, const CityInfo& b) {
+                      return a.name < b.name;
+                  });
+
+        return true;
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error parsing cities.json: " << e.what() << std::endl;
+        return false;
     }
 }
