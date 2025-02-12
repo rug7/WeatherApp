@@ -487,42 +487,45 @@ void WeatherApp::RenderGUI() {
 
         // Search bar
         ImGui::SetCursorPos(ImVec2(margin, margin + 200));
+
+// Style setup for search bar
         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 25.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 12));
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.15f, 0.20f, 0.25f, 0.95f));
         ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.17f, 0.22f, 0.27f, 0.95f));
 
-// Create a group for the search bar and clear button
-        ImGui::BeginGroup();
-        ImGui::PushItemWidth(700);
-
-// Input text
+// Search input
         static char searchBuffer[256] = "";
         static int currentItem = -1;
+
+// Search bar with clear button
+        ImGui::SetNextItemWidth(670);
         bool searchChanged = ImGui::InputText("##Search", searchBuffer, IM_ARRAYSIZE(searchBuffer),
                                               ImGuiInputTextFlags_EnterReturnsTrue);
 
-// Calculate position for the clear button
-        float buttonPosX = ImGui::GetItemRectMax().x - 35;
-        float buttonPosY = ImGui::GetItemRectMin().y + (ImGui::GetItemRectSize().y - 30) * 0.5f;
+// Clear button
+        if (strlen(searchBuffer) > 0) {
+            ImGui::SameLine();
 
-// Position the clear button
-        ImGui::SameLine(0, 0);
-        ImGui::SetCursorPosX(buttonPosX);
-        ImGui::SetCursorPosY(buttonPosY);
+            // Clear button styling
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 0.3f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 0.3f, 0.5f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.35f, 0.35f, 0.35f, 0.6f));
 
-// Style for the clear button
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0,0,0,0));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.5f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.3f, 0.3f, 0.3f, 0.5f));
+            // Render clear button
+            if (ImGui::Button("×##clear", ImVec2(35, 35))) {
+                searchBuffer[0] = '\0';
+                showAutocompleteSuggestions = false;
+                currentItem = -1;
+                lastSearchInput = "";
+            }
 
-        if (ImGui::Button("×##clear", ImVec2(30, 30))) {
-            searchBuffer[0] = '\0';
-            showAutocompleteSuggestions = false;
+            ImGui::PopStyleColor(3);
         }
 
-        ImGui::PopStyleColor(3);
-        ImGui::EndGroup();
+// Pop search bar styles
+        ImGui::PopStyleColor(2);
+        ImGui::PopStyleVar(2);
 
 
 // Handle keyboard navigation
@@ -638,10 +641,10 @@ void WeatherApp::RenderGUI() {
                 currentItem = -1;
             }
         }
-
-        ImGui::PopItemWidth();
-        ImGui::PopStyleColor(2);
-        ImGui::PopStyleVar(2);
+//
+//        ImGui::PopItemWidth();
+//        ImGui::PopStyleColor(2);
+//        ImGui::PopStyleVar(2);
 
         // Weather Cards
         float cardWidth = 220.0f;
@@ -936,14 +939,14 @@ void WeatherApp::FetchAndDisplayWeather() {
 }
 
 void WeatherApp::FetchCityDetails(const std::string& city) {
-    // First verify if the city exists by making an API call
+    // Extract city name from "City, Country" format
     std::string cityName = city;
     size_t commaPos = city.find(',');
     if (commaPos != std::string::npos) {
         cityName = city.substr(0, commaPos);
     }
 
-    // Rest of your existing code, but use cityName instead of city
+    // Rest of your existing code, but use cityName for creating the CityWeather object
     const std::string API_KEY = "fca1d27d648fbdf79758043a64459748";
     httplib::Client cli("http://api.openweathermap.org");
 
@@ -955,7 +958,7 @@ void WeatherApp::FetchCityDetails(const std::string& city) {
 
         // Check if city already exists
         for (auto& cityWeather : cities) {
-            if (cityWeather.GetCityName() == city) {
+            if (cityWeather.GetCityName() == cityName) {  // Compare with cityName instead of city
                 cityWeather.UpdateWeatherData();
                 currentCity = &cityWeather;
                 showCityDetails = true;
@@ -963,23 +966,19 @@ void WeatherApp::FetchCityDetails(const std::string& city) {
             }
         }
 
-        // Create a new city
-        CityWeather newCity(city);
+        // Create a new city with only the city name
+        CityWeather newCity(cityName);  // Use cityName instead of city
         newCity.UpdateWeatherData();
 
         if (cities.size() < MAX_CITIES) {
-            // Add to panel if under MAX_CITIES
             cities.push_back(newCity);
             currentCity = &cities.back();
         } else {
-            // Just show details without adding to panel
             tempCity = newCity;
             currentCity = &tempCity;
         }
         showCityDetails = true;
-
     } else {
-        // Show error message that city doesn't exist
         showNotification = true;
         notificationMessage = "City not found!";
         notificationTimer = 2.0f;
