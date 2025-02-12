@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="WeatherAppCustom"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\vcpkg\;CMake Files\..\..\..\..\vcpkg\scripts\;CMake Files\..\..\..\..\vcpkg\scripts\buildsystems\;CMake Files\..\..\..\..\vcpkg\installed\;CMake Files\..\..\..\..\vcpkg\installed\x64-windows\;CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\;CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\glfw3\;CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\glew\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="WeatherAppCustom">
+				<Option output="C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/WeatherAppCustom.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DWIN32_LEAN_AND_MEAN"/>
+					<Add option="-D_WIN32_WINNT=0x0601"/>
+					<Add option="-DGLFW_DLL"/>
+					<Add directory="C:/Users/majda/CLionProjects/WeatherAppCustom/src"/>
+					<Add directory="C:/Users/majda/CLionProjects/WeatherAppCustom/ImGui"/>
+					<Add directory="C:/Users/majda/CLionProjects/WeatherAppCustom/Externals"/>
+					<Add directory="C:/vcpkg/installed/x64-windows/include"/>
+					<Add directory="C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++"/>
+					<Add directory="C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward"/>
+					<Add directory="C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include"/>
+					<Add directory="C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed"/>
+					<Add directory="C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 WeatherAppCustom"/>
+					<CompileFile command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="WeatherAppCustom/fast">
+				<Option output="C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/WeatherAppCustom.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DWIN32_LEAN_AND_MEAN"/>
+					<Add option="-D_WIN32_WINNT=0x0601"/>
+					<Add option="-DGLFW_DLL"/>
+					<Add directory="C:/Users/majda/CLionProjects/WeatherAppCustom/src"/>
+					<Add directory="C:/Users/majda/CLionProjects/WeatherAppCustom/ImGui"/>
+					<Add directory="C:/Users/majda/CLionProjects/WeatherAppCustom/Externals"/>
+					<Add directory="C:/vcpkg/installed/x64-windows/include"/>
+					<Add directory="C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++"/>
+					<Add directory="C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward"/>
+					<Add directory="C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include"/>
+					<Add directory="C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed"/>
+					<Add directory="C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 WeatherAppCustom/fast"/>
+					<CompileFile command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/CityWeather.cpp">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/CityWeather.h">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/ImGui/imgui.cpp">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/ImGui/imgui.h">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/ImGui/imgui_demo.cpp">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/ImGui/imgui_draw.cpp">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/ImGui/imgui_impl_glfw.cpp">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/ImGui/imgui_impl_glfw.h">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/ImGui/imgui_impl_opengl3.cpp">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/ImGui/imgui_impl_opengl3.h">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/ImGui/imgui_tables.cpp">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/ImGui/imgui_widgets.cpp">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/WeatherApp.cpp">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/WeatherApp.h">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/main.cpp">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/stb_image.cpp">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/stb_image.h">
+			<Option target="WeatherAppCustom"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/credentials.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/favorites.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/../../../../vcpkg/scripts/buildsystems/vcpkg.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\vcpkg\scripts\buildsystems\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/../../../../vcpkg/installed/x64-windows/share/glfw3/glfw3Config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\glfw3\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/../../../../vcpkg/installed/x64-windows/share/glfw3/glfw3ConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\glfw3\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/../../../../vcpkg/installed/x64-windows/share/glfw3/glfw3Targets-debug.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\glfw3\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/../../../../vcpkg/installed/x64-windows/share/glfw3/glfw3Targets-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\glfw3\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/../../../../vcpkg/installed/x64-windows/share/glfw3/glfw3Targets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\glfw3\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/../../../../vcpkg/installed/x64-windows/share/glew/CopyImportedTargetProperties.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\glew\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/../../../../vcpkg/installed/x64-windows/share/glew/glew-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\glew\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/../../../../vcpkg/installed/x64-windows/share/glew/glew-targets-debug.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\glew\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/../../../../vcpkg/installed/x64-windows/share/glew/glew-targets-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\glew\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/../../../../vcpkg/installed/x64-windows/share/glew/glew-targets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\glew\"/>
+		</Unit>
+		<Unit filename="C:/Users/majda/CLionProjects/WeatherAppCustom/../../../../vcpkg/installed/x64-windows/share/glew/vcpkg-cmake-wrapper.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\vcpkg\installed\x64-windows\share\glew\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

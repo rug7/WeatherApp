@@ -1,0 +1,3 @@
+C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/CMakeFiles/WeatherAppCustom.dir
+C:/Users/majda/CLionProjects/WeatherAppCustom/cmake-build-debug/CMakeFiles/edit_cache.dir
